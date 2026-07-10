@@ -30,7 +30,7 @@ export default function HomePage() {
       }
 
       sessionStorage.setItem("FangWeiGe_key", key.trim().toUpperCase());
-      router.push("/upload");
+      router.push("/upload-free");
     } catch (err: any) {
       setError(err.message);
     } finally {
