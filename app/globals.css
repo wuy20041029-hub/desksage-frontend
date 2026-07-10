@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #2c2c2c;
+  --ink-light: #5a5a5a;
+  --paper: #f5f1e8;
+  --paper-pure: #faf7ef;
+  --moss: #6b7553;
+  --moss-dark: #4a5339;
+  --moss-light: #8b9170;
+  --gold: #b89968;
+  --border: #d4cdb8;
+}
+
+* { -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+.font-serif { font-family: 'Noto Serif SC', serif; }
+.font-sans { font-family: 'Noto Sans SC', sans-serif; }
+
+/* 主容器 */
+.paper-bg { background: linear-gradient(180deg, #faf7ef 0%, #f0ebd9 100%); }
+
+/* 印章风格按钮 */
+.btn-ink {
+  background: var(--moss-dark);
+  color: #f5f1e8;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn-ink:hover { background: #3d4430; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,83,57,0.25); }
+.btn-ink:active { transform: translateY(0); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--moss-dark);
+  border: 1px solid var(--moss-dark);
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+.btn-outline:hover { background: var(--moss-dark); color: var(--paper-pure); }
+
+/* 卡片 */
+.card-paper {
+  background: var(--paper-pure);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* 印章装饰 */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.9rem;
+  background: rgba(184, 153, 104, 0.08);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--moss-dark);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+}
+
+/* 输入框 */
+.input-paper {
+  background: var(--paper-pure);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  font-family: 'Noto Sans SC', sans-serif;
+  transition: all 0.2s;
+}
+.input-paper:focus {
+  outline: none;
+  border-color: var(--moss);
+  box-shadow: 0 0 0 3px rgba(107, 117, 83, 0.1);
+}
+
+/* 五行色 */
+.wuxing-jin { color: #c9a96e; }
+.wuxing-mu { color: #6b7553; }
+.wuxing-shui { color: #4a5d7a; }
+.wuxing-huo { color: #b85c3a; }
+.wuxing-tu { color: #8b6f47; }
+
+.bg-jin { background-color: #c9a96e; }
+.bg-mu { background-color: #6b7553; }
+.bg-shui { background-color: #4a5d7a; }
+.bg-huo { background-color: #b85c3a; }
+.bg-tu { background-color: #8b6f47; }
+
+/* 进度动画 */
+@keyframes ink-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.ink-progress {
+  background: linear-gradient(90deg, #6b7553, #8b9170, #6b7553);
+  background-size: 200% 100%;
+  animation: ink-flow 2s linear infinite;
+}
+
+/* 印章特效 */
+.seal-mark {
+  display: inline-block;
+  background: #b85c3a;
+  color: #faf7ef;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  transform: rotate(-3deg);
+  border: 2px solid #b85c3a;
+  box-shadow: inset 0 0 0 2px #faf7ef, inset 0 0 0 4px #b85c3a;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
