@@ -22,10 +22,10 @@ export default function UploadPage() {
   const [retestToken, setRetestToken] = useState("");
 
   useEffect(() => {
-    const k = sessionStorage.getItem("fangweige_key");
+    const k = sessionStorage.getItem("FangWeiGe_key");
     if (!k) { router.push("/"); return; }
     setKey(k);
-    const rt = sessionStorage.getItem("fangweige_retest");
+    const rt = sessionStorage.getItem("FangWeiGe_retest");
     if (rt) setRetestToken(rt);
   }, [router]);
 
@@ -68,14 +68,14 @@ export default function UploadPage() {
       formData.append("name", name);
       if (retestToken) {
         formData.append("retest_token", retestToken);
-        sessionStorage.removeItem("fangweige_retest");
+        sessionStorage.removeItem("FangWeiGe_retest");
       }
       const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST", headers: { "X-Key": key }, body: formData,
       });
       if (!res.ok) { const data = await res.json(); throw new Error(data.detail || "上传失败"); }
       const data = await res.json();
-      sessionStorage.setItem("fangweige_task", data.task_id);
+      sessionStorage.setItem("FangWeiGe_task", data.task_id);
       router.push(`/diagnosing-free/${data.task_id}`);
     } catch (err: any) { setError(err.message); setUploading(false); }
   };
@@ -89,7 +89,7 @@ export default function UploadPage() {
           </div>
           <span className="font-serif font-bold text-[#2c2c2c] tracking-wider">方位阁</span>
         </div>
-        <button onClick={() => { sessionStorage.removeItem("fangweige_key"); router.push("/"); }} className="font-serif text-xs text-[#8b8b8b] hover:text-[#4a5339] tracking-wider">
+        <button onClick={() => { sessionStorage.removeItem("FangWeiGe_key"); router.push("/"); }} className="font-serif text-xs text-[#8b8b8b] hover:text-[#4a5339] tracking-wider">
           更换密钥
         </button>
       </header>

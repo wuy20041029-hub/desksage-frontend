@@ -1,0 +1,12 @@
+Error: ENOENT: no such file or directory, mkdir 'D:\workspace-desk\frontend\.next'
+    at async Object.mkdir (node:internal/fs/promises:859:10)
+    at async HotReloader.start (D:\workspace-desk\frontend\node_modules\next\dist\server\dev\hot-reloader-webpack.js:588:9)
+    at async startWatcher (D:\workspace-desk\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:1040:5)
+    at async setupDevBundler (D:\workspace-desk\frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:1627:20)
+    at async initialize (D:\workspace-desk\frontend\node_modules\next\dist\server\lib\router-server.js:71:30)
+    at async Server.<anonymous> (D:\workspace-desk\frontend\node_modules\next\dist\server\lib\start-server.js:221:36) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: 'D:\\workspace-desk\\frontend\\.next'
+}

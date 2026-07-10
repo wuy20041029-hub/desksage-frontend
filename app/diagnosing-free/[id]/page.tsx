@@ -14,7 +14,7 @@ export default function DiagnosingPage() {
   const [status, setStatus] = useState<any>(null);
 
   useEffect(() => {
-    const key = sessionStorage.getItem("fangweige_key");
+    const key = sessionStorage.getItem("FangWeiGe_key");
     if (!key) { router.push("/"); return; }
     const poll = setInterval(async () => {
       try {

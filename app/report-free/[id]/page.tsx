@@ -14,7 +14,7 @@ export default function ReportFree() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    const k = sessionStorage.getItem("fangweige_key");
+    const k = sessionStorage.getItem("FangWeiGe_key");
     if (!k) { window.location.href = "/"; return; }
     fetch(`${API_BASE_URL}/api/report-free/${taskId}`, { headers: { "X-Key": k } })
       .then((r) => r.json()).then((d) => { setReport(d); setLoading(false); })
@@ -22,7 +22,7 @@ export default function ReportFree() {
   }, [taskId]);
 
   const handleRetest = () => {
-    sessionStorage.setItem("fangweige_retest", taskId);
+    sessionStorage.setItem("FangWeiGe_retest", taskId);
     window.location.href = "/upload-free";
   };
 

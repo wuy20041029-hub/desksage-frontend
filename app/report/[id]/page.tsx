@@ -30,7 +30,7 @@ export default function ReportPage() {
   const [payNote, setPayNote] = useState("");
 
   useEffect(() => {
-    const key = sessionStorage.getItem("fangweige_key");
+    const key = sessionStorage.getItem("FangWeiGe_key");
     if (!key) { window.location.href = "/"; return; }
     fetch(`${API_BASE_URL}/api/report/${taskId}`, { headers: { "X-Key": key } })
       .then((r) => r.json()).then((data) => { setReport(data); setLoading(false); })
@@ -38,18 +38,18 @@ export default function ReportPage() {
   }, [taskId]);
 
   const reload = async () => {
-    const key = sessionStorage.getItem("fangweige_key");
+    const key = sessionStorage.getItem("FangWeiGe_key");
     const r = await fetch(`${API_BASE_URL}/api/report/${taskId}`, { headers: { "X-Key": key! } });
     setReport(await r.json());
   };
 
   const handleRetest = () => {
-    sessionStorage.setItem("fangweige_retest", taskId);
+    sessionStorage.setItem("FangWeiGe_retest", taskId);
     window.location.href = "/upload";
   };
 
   const submitPay = async () => {
-    const key = sessionStorage.getItem("fangweige_key");
+    const key = sessionStorage.getItem("FangWeiGe_key");
     await fetch(`${API_BASE_URL}/api/unlock/${taskId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Key": key! },
