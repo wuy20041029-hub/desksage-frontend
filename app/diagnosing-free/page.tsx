@@ -1,16 +1,16 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from '../../lib/config';
-import { useParams, useRouter } from "next/navigation";
+import { API_BASE_URL } from '../lib/config';
+import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle, Loader2, Circle, Compass } from "lucide-react";
 
 interface Step { name: string; label: string; icon: string; status: string; }
 
 export default function DiagnosingPage() {
-  const params = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const taskId = params.id as string;
+  const taskId = searchParams.get('id') || '';
   const [status, setStatus] = useState<any>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function DiagnosingPage() {
         setStatus(data);
         if (data.status === "completed") {
           clearInterval(poll);
-          setTimeout(() => router.push(`/report-free/${taskId}`), 1200);
+          setTimeout(() => router.push(`/report-free/?id=${taskId}`), 1200);
         }
       } catch {}
     }, 1500);

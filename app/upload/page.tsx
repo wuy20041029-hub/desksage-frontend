@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { API_BASE_URL } from '../lib/config';
@@ -11,7 +11,6 @@ export default function UploadPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [retestToken, setRetestToken] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -26,8 +25,6 @@ export default function UploadPage() {
     const k = sessionStorage.getItem("FangWeiGe_key");
     if (!k) { router.push("/"); return; }
     setKey(k);
-    const rt = sessionStorage.getItem("FangWeiGe_retest");
-    if (rt) setRetestToken(rt);
   }, [router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,10 +67,6 @@ export default function UploadPage() {
       formData.append("calendarType", calendarType);
       formData.append("gender", gender);
       formData.append("name", name);
-      if (retestToken) {
-        formData.append("retest_token", retestToken);
-        sessionStorage.removeItem("FangWeiGe_retest");
-      }
 
       const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST",
@@ -88,7 +81,7 @@ export default function UploadPage() {
 
       const data = await res.json();
       sessionStorage.setItem("FangWeiGe_task", data.task_id);
-      router.push(`/diagnosing/${data.task_id}`);
+      router.push(`/diagnosing/?id=${data.task_id}`);
     } catch (err: any) {
       setError(err.message);
       setUploading(false);
@@ -116,11 +109,6 @@ export default function UploadPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-6">
         <div className="max-w-md w-full">
           <div className="text-center mb-6">
-            {retestToken && (
-              <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 bg-[#6b7553]/15 rounded-full border border-[#6b7553]/40">
-                <span className="font-serif text-xs text-[#4a5339] tracking-wider">复测 · 已改造后再测，气场可见改善</span>
-              </div>
-            )}
             <div className="seal mb-3">起卦参断</div>
             <h1 className="font-serif text-2xl font-bold text-[#2c2c2c] tracking-wider mb-2">
               请录工位与命主信息

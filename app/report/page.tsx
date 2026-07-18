@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from '../../lib/config';
-import { useParams } from "next/navigation";
-import { Compass, AlertTriangle, ChevronDown, ChevronUp, Repeat, TrendingUp, Lock, X } from "lucide-react";
+import { API_BASE_URL } from '../lib/config';
+import { useSearchParams } from "next/navigation";
+import { Compass, AlertTriangle, ChevronDown, ChevronUp, Lock, X } from "lucide-react";
 
 interface Report {
   task_id: string;
@@ -11,9 +11,6 @@ interface Report {
   design_result: any;
   final_report: any;
   bazi_info: any;
-  is_retest?: boolean;
-  prev_score?: number;
-  current_score?: number;
   unlocked: boolean;
   disclaimer: string;
 }
@@ -21,8 +18,8 @@ interface Report {
 const WX_MAP: any = { jin: { label: "金", bg: "bg-jin" }, mu: { label: "木", bg: "bg-mu" }, shui: { label: "水", bg: "bg-shui" }, huo: { label: "火", bg: "bg-huo" }, tu: { label: "土", bg: "bg-tu" } };
 
 export default function ReportPage() {
-  const params = useParams();
-  const taskId = params.id as string;
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get('id') || '';
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -41,11 +38,6 @@ export default function ReportPage() {
     const key = sessionStorage.getItem("FangWeiGe_key");
     const r = await fetch(`${API_BASE_URL}/api/report/${taskId}`, { headers: { "X-Key": key! } });
     setReport(await r.json());
-  };
-
-  const handleRetest = () => {
-    sessionStorage.setItem("FangWeiGe_retest", taskId);
-    window.location.href = "/upload";
   };
 
   const submitPay = async () => {
@@ -68,7 +60,7 @@ export default function ReportPage() {
     </div>
   );
 
-  const { scan_result, design_result, bazi_info, is_retest, prev_score, unlocked } = report;
+  const { scan_result, design_result, bazi_info, unlocked } = report;
   const score = scan_result?.overall_score ?? 0;
   const scoreColor = score >= 70 ? "text-[#6b7553]" : score >= 50 ? "text-[#8b6f47]" : "text-[#b85c3a]";
   const wuxing = bazi_info?.wuxing || {};
@@ -95,12 +87,7 @@ export default function ReportPage() {
           <p className="font-serif text-xs text-[#5a5a5a] tracking-wider">
             {bazi_info?.name || "命主"} · {bazi_info?.birthdate} · {bazi_info?.birthtime_label}
           </p>
-          {is_retest && (
-            <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-[#6b7553]/15 rounded-full border border-[#6b7553]/40">
-              <TrendingUp className="w-3 h-3 text-[#6b7553]" />
-              <span className="font-serif text-xs text-[#4a5339] tracking-wider">复测 · 由 {prev_score} 升至 {score}</span>
-            </div>
-          )}
+
         </header>
 
         <section className="card-paper p-6 shadow-sm">
@@ -286,7 +273,7 @@ export default function ReportPage() {
                 <button onClick={() => setShowPay(true)} className="btn-ink px-8 py-3 rounded font-serif tracking-wider text-base">
                   解锁完整方案 · ¥9.9
                 </button>
-                <div className="mt-3 font-serif text-xs text-[#8b8b8b] tracking-wider">注：复测免费 · 解锁一次终身查看</div>
+                <div className="mt-3 font-serif text-xs text-[#8b8b8b] tracking-wider">注：解锁一次终身查看</div>
               </div>
             </div>
           </>
@@ -371,12 +358,7 @@ export default function ReportPage() {
         </div>
 
         <div className="text-center pt-2 space-y-3">
-          {!is_retest && score < 95 && (
-            <button onClick={handleRetest} className="inline-flex items-center gap-2 px-6 py-3 bg-[#faf7ef] border border-[#4a5339] text-[#4a5339] rounded tracking-wider hover:bg-[#4a5339] hover:text-[#f5f1e8] transition-colors">
-              <Repeat className="w-4 h-4" />
-              <span className="font-serif">我已改造 · 免费复测</span>
-            </button>
-          )}
+
           <div>
             <a href="/" className="font-serif text-sm text-[#4a5339] hover:text-[#2c2c2c] tracking-wider underline underline-offset-4">再起一卦 →</a>
           </div>
@@ -398,7 +380,7 @@ export default function ReportPage() {
 
             <div className="text-center mb-5">
               <div className="font-serif text-3xl font-bold text-[#2c2c2c] mb-1">¥ 9.9</div>
-              <div className="font-serif text-xs text-[#8b8b8b] tracking-wider">一次解锁 · 终身查看 · 复测免费</div>
+              <div className="font-serif text-xs text-[#8b8b8b] tracking-wider">一次解锁 · 终身查看</div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">

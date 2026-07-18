@@ -1,47 +1,589 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600&display=swap');
 
+/* ==============================
+   CSS Variables
+   ============================== */
 :root {
   --ink: #2c2c2c;
   --ink-light: #5a5a5a;
+  --ink-faint: #a0a0a0;
   --paper: #f5f1e8;
   --paper-pure: #faf7ef;
+  --paper-aged: #e8e0cc;
   --moss: #6b7553;
   --moss-dark: #4a5339;
+  --moss-deep: #363d28;
   --moss-light: #8b9170;
   --gold: #b89968;
+  --gold-light: #d4be8a;
+  --vermilion: #b85c3a;
+  --vermilion-dark: #9e4a2e;
+  --vermilion-light: #d4724e;
   --border: #d4cdb8;
+  --border-light: #e8e2d0;
+  --mountain-far: #c8c4b8;
+  --mountain-mid: #a8a498;
+  --mountain-near: #8a8678;
 }
 
-* { -webkit-font-smoothing: antialiased; }
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'Noto Sans SC', sans-serif;
   background-color: var(--paper);
   color: var(--ink);
+  overflow-x: hidden;
 }
 
-.font-serif { font-family: 'Noto Serif SC', serif; }
-.font-sans { font-family: 'Noto Sans SC', sans-serif; }
+.font-serif { font-family: 'Songti SC', 'STSong', 'SimSun', 'Noto Serif CJK SC', serif; }
+.font-sans { font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif; }
 
-/* 主容器 */
-.paper-bg { background: linear-gradient(180deg, #faf7ef 0%, #f0ebd9 100%); }
+/* ==============================
+   1. ink-wash-bg - Xuan paper texture + ink wash
+   ============================== */
+.ink-wash-bg {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(200, 195, 180, 0.08) 2px,
+      rgba(200, 195, 180, 0.08) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(200, 195, 180, 0.05) 3px,
+      rgba(200, 195, 180, 0.05) 4px
+    ),
+    linear-gradient(180deg, var(--paper-pure) 0%, var(--paper) 40%, #ece6d6 100%);
+  min-height: 100vh;
+}
 
-/* 印章风格按钮 */
+.ink-wash-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(74, 83, 57, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(74, 83, 57, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(74, 83, 57, 0.04) 0%, transparent 60%);
+}
+
+/* ==============================
+   2. bagua-compass - CSS Bagua compass with rotation
+   ============================== */
+.bagua-compass {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  animation: compass-rotate 60s linear infinite;
+}
+
+.bagua-compass.paused {
+  animation-play-state: paused;
+}
+
+@keyframes compass-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Outer ring */
+.bagua-outer-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--moss-dark);
+  border-radius: 50%;
+}
+
+.bagua-outer-ring::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--moss-light);
+  border-radius: 50%;
+}
+
+.bagua-outer-ring::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed rgba(139, 145, 112, 0.4);
+  border-radius: 50%;
+}
+
+/* Middle ring */
+.bagua-middle-ring {
+  position: absolute;
+  inset: 50px;
+  border: 1.5px solid var(--moss);
+  border-radius: 50%;
+}
+
+.bagua-middle-ring::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(107, 117, 83, 0.3);
+  border-radius: 50%;
+}
+
+/* Inner Taiji */
+.bagua-inner-ring {
+  position: absolute;
+  inset: 85px;
+  border: 2px solid var(--moss-dark);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 25%, var(--moss-dark) 18%, transparent 18%),
+    radial-gradient(circle at 50% 75%, var(--paper-pure) 18%, transparent 18%),
+    radial-gradient(circle at 50% 25%, var(--paper-pure) 50%, transparent 50%),
+    radial-gradient(circle at 50% 75%, var(--moss-dark) 50%, transparent 50%);
+}
+
+/* Direction labels */
+.bagua-direction {
+  position: absolute;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px;
+  color: var(--moss-dark);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.bagua-direction.north {
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bagua-direction.south {
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bagua-direction.east {
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bagua-direction.west {
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Yao lines */
+.bagua-line {
+  position: absolute;
+  background: var(--moss-dark);
+  border-radius: 1px;
+}
+
+.bagua-line.yang {
+  width: 22px;
+  height: 3px;
+}
+
+.bagua-line.yin {
+  width: 22px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--moss-dark) 0%,
+    var(--moss-dark) 38%,
+    transparent 38%,
+    transparent 62%,
+    var(--moss-dark) 62%,
+    var(--moss-dark) 100%
+  );
+}
+
+/* ==============================
+   3. stamp-seal - Red seal stamp with micro-rotation
+   ============================== */
+.stamp-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--vermilion);
+  color: var(--paper-pure);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1rem;
+  border: 3px solid var(--vermilion);
+  box-shadow:
+    inset 0 0 0 2px var(--paper-pure),
+    inset 0 0 0 4px var(--vermilion),
+    0 2px 8px rgba(184, 92, 58, 0.3);
+  transform: rotate(-4deg);
+  position: relative;
+}
+
+.stamp-seal::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(184, 92, 58, 0.2);
+}
+
+/* Aged texture */
+.stamp-seal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(250, 247, 239, 0.15) 0%, transparent 30%),
+    radial-gradient(circle at 75% 20%, rgba(250, 247, 239, 0.1) 0%, transparent 25%),
+    radial-gradient(circle at 45% 55%, rgba(250, 247, 239, 0.08) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+/* Small stamp */
+.stamp-seal-sm {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-width: 2px;
+  box-shadow:
+    inset 0 0 0 1px var(--paper-pure),
+    inset 0 0 0 3px var(--vermilion),
+    0 1px 4px rgba(184, 92, 58, 0.2);
+}
+
+/* ==============================
+   4. vertical-text
+   ============================== */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.3em;
+  line-height: 2;
+}
+
+.vertical-text-right {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Noto Serif SC', serif;
+  letter-spacing: 0.3em;
+  line-height: 2;
+  direction: rtl;
+}
+
+/* ==============================
+   5. brush-divider
+   ============================== */
+.brush-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 15%,
+    var(--moss-light) 50%,
+    var(--border) 85%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+/* Ornate divider with center dot */
+.brush-divider-ornate {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 15%,
+    var(--moss-light) 50%,
+    var(--border) 85%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+.brush-divider-ornate::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: var(--paper-pure);
+}
+
+/* Ink brush stroke divider */
+.brush-divider-ink {
+  position: relative;
+  height: 2px;
+  margin: 2rem 0;
+  background: transparent;
+}
+
+.brush-divider-ink::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(44, 44, 44, 0.1) 10%,
+    rgba(44, 44, 44, 0.25) 30%,
+    rgba(44, 44, 44, 0.35) 50%,
+    rgba(44, 44, 44, 0.25) 70%,
+    rgba(44, 44, 44, 0.1) 90%,
+    transparent 100%
+  );
+}
+
+.brush-divider-ink::after {
+  content: '';
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: calc(50% + 2px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(44, 44, 44, 0.05) 20%,
+    rgba(44, 44, 44, 0.15) 50%,
+    rgba(44, 44, 44, 0.05) 80%,
+    transparent 100%
+  );
+}
+
+/* ==============================
+   6. ink-spread animation
+   ============================== */
+@keyframes ink-spread-anim {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.ink-spread {
+  position: relative;
+  overflow: hidden;
+}
+
+.ink-spread::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(74, 83, 57, 0.15) 0%,
+    rgba(74, 83, 57, 0.05) 50%,
+    transparent 100%
+  );
+  animation: ink-spread-anim 4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ink-drop {
+  0% {
+    transform: translateY(-20px) scaleY(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* ==============================
+   7. ink-progress - Ink flow progress bar
+   ============================== */
+@keyframes ink-flow-stream {
+  0% {
+    background-position: 0% 50%;
+    width: 30%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    background-position: 200% 50%;
+    width: 30%;
+  }
+}
+
+.ink-progress {
+  position: relative;
+  height: 3px;
+  background: rgba(200, 195, 180, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ink-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(74, 83, 57, 0.2) 20%,
+      rgba(74, 83, 57, 0.6) 50%,
+      rgba(74, 83, 57, 0.2) 80%,
+      transparent 100%
+    );
+  background-size: 200% 100%;
+  animation: ink-flow-stream 2.5s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+/* Vermilion variant */
+.ink-progress-vermilion::after {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(184, 92, 58, 0.15) 20%,
+      rgba(184, 92, 58, 0.5) 50%,
+      rgba(184, 92, 58, 0.15) 80%,
+      transparent 100%
+    );
+  background-size: 200% 100%;
+}
+
+/* ==============================
+   8. card-float hover effect
+   ============================== */
+.card-float {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-float:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 32px rgba(74, 83, 57, 0.08),
+    0 2px 8px rgba(74, 83, 57, 0.04);
+}
+
+/* ==============================
+   Preserved & Enhanced Components
+   ============================== */
+
+/* Main container */
+.paper-bg {
+  background: linear-gradient(180deg, #faf7ef 0%, #f0ebd9 100%);
+}
+
+/* Ink-style button */
 .btn-ink {
   background: var(--moss-dark);
   color: #f5f1e8;
   font-family: 'Noto Serif SC', serif;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(250, 247, 239, 0.1);
 }
-.btn-ink:hover { background: #3d4430; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,83,57,0.25); }
-.btn-ink:active { transform: translateY(0); }
+
+.btn-ink:hover {
+  background: var(--moss-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(74, 83, 57, 0.25);
+}
+
+.btn-ink:active {
+  transform: translateY(0);
+}
+
+.btn-ink::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 247, 239, 0.08) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* Vermilion seal button */
+.btn-vermilion {
+  background: var(--vermilion);
+  color: var(--paper-pure);
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--vermilion);
+  box-shadow:
+    inset 0 0 0 1px rgba(250, 247, 239, 0.15),
+    0 3px 12px rgba(184, 92, 58, 0.2);
+}
+
+.btn-vermilion:hover {
+  background: var(--vermilion-dark);
+  box-shadow:
+    inset 0 0 0 1px rgba(250, 247, 239, 0.15),
+    0 6px 24px rgba(184, 92, 58, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-vermilion:active {
+  transform: translateY(0);
+}
+
+.btn-vermilion::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 25% 75%, rgba(250, 247, 239, 0.08) 0%, transparent 30%),
+    radial-gradient(circle at 70% 20%, rgba(250, 247, 239, 0.05) 0%, transparent 25%);
+  pointer-events: none;
+}
 
 .btn-outline {
   background: transparent;
@@ -53,14 +595,43 @@ body {
 }
 .btn-outline:hover { background: var(--moss-dark); color: var(--paper-pure); }
 
-/* 卡片 */
+/* Cards */
 .card-paper {
   background: var(--paper-pure);
   border: 1px solid var(--border);
   border-radius: 4px;
 }
 
-/* 印章装饰 */
+/* Ink textured card */
+.card-ink {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(250, 247, 239, 0.9) 0%,
+      rgba(245, 241, 232, 0.95) 100%
+    );
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  position: relative;
+}
+
+.card-ink::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(200, 195, 180, 0.06) 3px,
+      rgba(200, 195, 180, 0.06) 4px
+    );
+  pointer-events: none;
+}
+
+/* Seal tag */
 .seal {
   display: inline-flex;
   align-items: center;
@@ -75,21 +646,64 @@ body {
   letter-spacing: 0.15em;
 }
 
-/* 输入框 */
+/* Inputs */
 .input-paper {
   background: var(--paper-pure);
   border: 1px solid var(--border);
   color: var(--ink);
   font-family: 'Noto Sans SC', sans-serif;
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
+
 .input-paper:focus {
   outline: none;
   border-color: var(--moss);
-  box-shadow: 0 0 0 3px rgba(107, 117, 83, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(107, 117, 83, 0.08),
+    0 0 12px rgba(107, 117, 83, 0.05);
 }
 
-/* 五行色 */
+/* Xuan paper input */
+.input-xuan {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(200, 195, 180, 0.05) 2px,
+      rgba(200, 195, 180, 0.05) 3px
+    ),
+    var(--paper-pure);
+  border: 1px solid var(--border-light);
+  color: var(--ink);
+  font-family: 'Noto Sans SC', sans-serif;
+  transition: all 0.3s;
+  letter-spacing: 0.1em;
+}
+
+.input-xuan:focus {
+  outline: none;
+  border-color: var(--moss-light);
+  box-shadow:
+    0 0 0 3px rgba(107, 117, 83, 0.06),
+    0 0 16px rgba(107, 117, 83, 0.04);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(200, 195, 180, 0.05) 2px,
+      rgba(200, 195, 180, 0.05) 3px
+    ),
+    #fdfbf5;
+}
+
+.input-xuan::placeholder {
+  color: var(--ink-faint);
+  letter-spacing: 0.15em;
+}
+
+/* Wuxing colors */
 .wuxing-jin { color: #c9a96e; }
 .wuxing-mu { color: #6b7553; }
 .wuxing-shui { color: #4a5d7a; }
@@ -102,28 +716,233 @@ body {
 .bg-huo { background-color: #b85c3a; }
 .bg-tu { background-color: #8b6f47; }
 
-/* 进度动画 */
-@keyframes ink-flow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-.ink-progress {
-  background: linear-gradient(90deg, #6b7553, #8b9170, #6b7553);
-  background-size: 200% 100%;
-  animation: ink-flow 2s linear infinite;
-}
-
-/* 印章特效 */
+/* Seal mark */
 .seal-mark {
   display: inline-block;
-  background: #b85c3a;
-  color: #faf7ef;
+  background: var(--vermilion);
+  color: var(--paper-pure);
   font-family: 'Noto Serif SC', serif;
   font-weight: 700;
   padding: 0.3rem 0.6rem;
   transform: rotate(-3deg);
-  border: 2px solid #b85c3a;
-  box-shadow: inset 0 0 0 2px #faf7ef, inset 0 0 0 4px #b85c3a;
+  border: 2px solid var(--vermilion);
+  box-shadow: inset 0 0 0 2px var(--paper-pure), inset 0 0 0 4px var(--vermilion);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
 }
+
+/* ==============================
+   ink-mountains - CSS mountain landscape decoration
+   ============================== */
+.ink-mountains {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ink-mountain-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ink-mountain-far {
+  height: 120px;
+  background: var(--mountain-far);
+  opacity: 0.35;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L100 120 L200 150 L350 80 L500 130 L600 60 L750 110 L900 50 L1000 100 L1100 70 L1200 120 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L100 120 L200 150 L350 80 L500 130 L600 60 L750 110 L900 50 L1000 100 L1100 70 L1200 120 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
+
+.ink-mountain-mid {
+  height: 100px;
+  background: var(--mountain-mid);
+  opacity: 0.22;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L150 140 L300 160 L450 100 L600 140 L750 90 L900 130 L1050 80 L1200 140 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L150 140 L300 160 L450 100 L600 140 L750 90 L900 130 L1050 80 L1200 140 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
+
+.ink-mountain-near {
+  height: 60px;
+  background: var(--mountain-near);
+  opacity: 0.12;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L200 160 L400 170 L600 140 L800 155 L1000 145 L1200 165 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpath d='M0 200 L200 160 L400 170 L600 140 L800 155 L1000 145 L1200 165 L1200 200Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: cover;
+  -webkit-mask-size: cover;
+}
+
+/* ==============================
+   Side vertical text decoration
+   ============================== */
+.side-text-decoration {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  letter-spacing: 0.5em;
+  color: rgba(139, 145, 112, 0.22);
+  line-height: 2.5;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+.side-text-decoration.left {
+  left: 24px;
+}
+
+.side-text-decoration.right {
+  right: 24px;
+  direction: rtl;
+}
+
+/* ==============================
+   Animations
+   ============================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes brushStrokeIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slowBreath {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-brush-stroke {
+  animation: brushStrokeIn 1.2s ease-out forwards;
+  transform-origin: center;
+}
+
+.animate-slow-breath {
+  animation: slowBreath 4s ease-in-out infinite;
+}
+
+/* Delay utilities */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }
+
+/* ==============================
+   Ink dot decoration
+   ============================== */
+.ink-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--moss-dark);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ==============================
+   Selection & Scrollbar
+   ============================== */
+::selection {
+  background: rgba(139, 145, 112, 0.25);
+  color: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--moss-light);
+}
+
+/* ==============================
+   Responsive
+   ============================== */
+@media (max-width: 768px) {
+  .side-text-decoration {
+    display: none;
+  }
+
+  .bagua-compass {
+    width: 200px;
+    height: 200px;
+  }
+
+  .bagua-middle-ring {
+    inset: 36px;
+  }
+
+  .bagua-inner-ring {
+    inset: 62px;
+  }
+
+  .ink-mountains {
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bagua-compass {
+    width: 160px;
+    height: 160px;
+  }
+
+  .bagua-middle-ring {
+    inset: 28px;
+  }
+
+  .bagua-inner-ring {
+    inset: 50px;
+  }
+}
+
